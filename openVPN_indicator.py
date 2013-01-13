@@ -41,8 +41,11 @@ class OpenVPNInd:
 		gtk.main()
 
 	def switch(self, widget):
-		if self.p.poll() == None:
-			self.p.terminate()
+		if 'tapVPN' in netifaces.interfaces():
+			if self.p.poll() == None:
+				self.p.terminate()
+			else:
+				subprocess.call(['gksu', 'killall', 'openvpn'])
 		else:
 			self.p = subprocess.Popen(['/home/ftoulemon/vpn/vpn-alfred.sh',
 				'80', 'tcp-client'])
