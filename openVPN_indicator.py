@@ -5,6 +5,7 @@ import gtk
 import appindicator
 
 import netifaces
+import subprocess
 
 PING_FREQUENCY = 10
 
@@ -15,6 +16,8 @@ class OpenVPNInd:
 				appindicator.CATEGORY_APPLICATION_STATUS)
 		self.ind.set_status(appindicator.STATUS_ACTIVE)
 		self.ind.set_attention_icon("/home/ftoulemon/dev/openvpn_indicator/lock_ok.png")
+		
+		self.p = subprocess.Popen('ls')
 
 		self.menu_setup()
 		self.ind.set_menu(self.menu)
@@ -38,7 +41,10 @@ class OpenVPNInd:
 		gtk.main()
 
 	def switch(self, widget):
-		print 'bleh'
+		if self.p.poll() == None:
+			self.p.terminate()
+		else:
+			self.p = subprocess.Popen(['watch', 'ls'])
 
 	def quit(self, widget):
 		sys.exit(0)
