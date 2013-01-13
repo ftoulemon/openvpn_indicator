@@ -8,11 +8,11 @@ PING_FREQUENCY = 10
 
 class OpenVPNInd:
 	def __init__(self):
-		self.ind = appindicator.Indicator("debian-doc-menu",
-				"indicator-messages",
+		self.ind = appindicator.Indicator("OpenVPN",
+				"/home/ftoulemon/dev/openvpn_indicator/lock_ko.png",
 				appindicator.CATEGORY_APPLICATION_STATUS)
 		self.ind.set_status(appindicator.STATUS_ACTIVE)
-		self.ind.set_attention_icon("lock_ok")
+		self.ind.set_attention_icon("/home/ftoulemon/dev/openvpn_indicator/lock_ok.png")
 		self.menu_setup()
 		self.ind.set_menu(self.menu)
 
@@ -25,7 +25,7 @@ class OpenVPNInd:
 		
 	def main(self):
 		self.check_vpn()
-		gtk.timeout_add(PING_FREQUENCY * 1000, self.check_vpn)
+		gtk.timeout_add(PING_FREQUENCY * 100, self.check_vpn)
 		gtk.main()
 
 	def quit(self, widget):
