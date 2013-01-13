@@ -7,7 +7,7 @@ import appindicator
 import netifaces
 import subprocess
 
-PING_FREQUENCY = 10
+PING_FREQUENCY = 5
 
 class OpenVPNInd:
 	def __init__(self):
@@ -44,7 +44,8 @@ class OpenVPNInd:
 		if self.p.poll() == None:
 			self.p.terminate()
 		else:
-			self.p = subprocess.Popen(['watch', 'ls'])
+			self.p = subprocess.Popen(['/home/ftoulemon/vpn/vpn-alfred.sh',
+				'80', 'tcp-client'])
 
 	def quit(self, widget):
 		sys.exit(0)
