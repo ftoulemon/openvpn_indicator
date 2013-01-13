@@ -4,6 +4,8 @@ import sys
 import gtk
 import appindicator
 
+import netifaces
+
 PING_FREQUENCY = 10
 
 class OpenVPNInd:
@@ -36,17 +38,16 @@ class OpenVPNInd:
 		gtk.main()
 
 	def switch(self, widget):
-		if self.ind.get_status == appindicator.STATUS_ATTENTION:
-			print '1'
-			self.ind.set_status(appindicator.STATUS_ACTIVE)
-		if self.ind.get_status == appindicator.STATUS_ACTIVE:
-			print '2'
-			self.ind.set_status(appindicator.STATUS_ATTENTION)
+		print 'bleh'
 
 	def quit(self, widget):
 		sys.exit(0)
 
 	def check_vpn(self):
+		if 'tapVPN' in netifaces.interfaces():
+			self.ind.set_status(appindicator.STATUS_ATTENTION)
+		else:
+			self.ind.set_status(appindicator.STATUS_ACTIVE)
 		return True
 
 if __name__== "__main__":
