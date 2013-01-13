@@ -8,6 +8,7 @@ import netifaces
 import subprocess
 
 PING_FREQUENCY = 5
+port = '80'
 
 class OpenVPNInd:
 	def __init__(self):
@@ -33,6 +34,25 @@ class OpenVPNInd:
 		self.vpn_off_item.connect("activate", self.vpn_off)
 		self.menu.append(self.vpn_off_item)
 
+		self.configm = gtk.Menu()
+		self.config = gtk.MenuItem("Config")
+		self.config.show()
+		self.config.set_submenu(self.configm)
+		self.port80 = gtk.CheckMenuItem("port 80")
+		self.port80.set_active(True)
+		self.port1194 = gtk.CheckMenuItem("port 1194")
+		self.port80.connect("activate", self.port_select_80)
+		self.port1194.connect("activate", self.port_select_1194)
+		self.port80.show()
+		self.port1194.show()
+		self.configm.append(self.port80)
+		self.configm.append(self.port1194)
+		self.menu.append(self.config)
+
+		self.separator = gtk.SeparatorMenuItem()
+		self.separator.show()
+		self.menu.append(self.separator)
+
 		self.quit_item = gtk.MenuItem("Quit")
 		self.quit_item.connect("activate", self.quit)
 		self.quit_item.show()
@@ -49,16 +69,26 @@ class OpenVPNInd:
 		gtk.timeout_add(PING_FREQUENCY * 1000, self.check_vpn)
 		gtk.main()
 
+	def port_select_80(self, widget):
+		port = '80'
+		self.port1194.set_active(False)
+
+	def port_select_1194(self, widget):
+		port = '1194'
+		self.port80.set_active(False)
+
 	def vpn_on(self, widget):
 		self.p = subprocess.Popen(['/home/ftoulemon/vpn/vpn-alfred.sh',
-			'80', 'tcp-client'])
+			port, 'tcp-client'])
 		self.vpn_off_item.show()
+		self.vpn_on_item.hide()
 
 	def vpn_off(self, widget):
 		if self.p.poll() == None:
 			self.p.terminate()
 		else:
 			subprocess.call(['gksu', 'killall', 'openvpn'])
+		self.vpn_off_item.hide()
 		self.vpn_on_item.show()
 
 	def quit(self, widget):
