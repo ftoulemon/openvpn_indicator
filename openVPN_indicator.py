@@ -25,30 +25,41 @@ class OpenVPNInd:
 	def menu_setup(self):
 		self.menu = gtk.Menu()
 
-		self.on_off_item = gtk.MenuItem("vpn on/off")
-		self.on_off_item.connect("activate", self.switch)
-		self.on_off_item.show()
-		self.menu.append(self.on_off_item)
+		self.vpn_on_item = gtk.MenuItem("vpn on")
+		self.vpn_on_item.connect("activate", self.vpn_on)
+		self.menu.append(self.vpn_on_item)
+
+		self.vpn_off_item = gtk.MenuItem("vpn off")
+		self.vpn_off_item.connect("activate", self.vpn_off)
+		self.menu.append(self.vpn_off_item)
 
 		self.quit_item = gtk.MenuItem("Quit")
 		self.quit_item.connect("activate", self.quit)
 		self.quit_item.show()
 		self.menu.append(self.quit_item)
+
+		if 'tapVPN' in netifaces.interfaces():
+			self.vpn_off_item.show()
+		else:
+			self.vpn_on_item.show()
+			
 		
 	def main(self):
 		self.check_vpn()
 		gtk.timeout_add(PING_FREQUENCY * 1000, self.check_vpn)
 		gtk.main()
 
-	def switch(self, widget):
-		if 'tapVPN' in netifaces.interfaces():
-			if self.p.poll() == None:
-				self.p.terminate()
-			else:
-				subprocess.call(['gksu', 'killall', 'openvpn'])
+	def vpn_on(self, widget):
+		self.p = subprocess.Popen(['/home/ftoulemon/vpn/vpn-alfred.sh',
+			'80', 'tcp-client'])
+		self.vpn_off_item.show()
+
+	def vpn_off(self, widget):
+		if self.p.poll() == None:
+			self.p.terminate()
 		else:
-			self.p = subprocess.Popen(['/home/ftoulemon/vpn/vpn-alfred.sh',
-				'80', 'tcp-client'])
+			subprocess.call(['gksu', 'killall', 'openvpn'])
+		self.vpn_on_item.show()
 
 	def quit(self, widget):
 		sys.exit(0)
