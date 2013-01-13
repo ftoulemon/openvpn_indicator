@@ -17,7 +17,7 @@ class OpenVPNInd:
 		self.ind.set_status(appindicator.STATUS_ACTIVE)
 		self.ind.set_attention_icon("/home/ftoulemon/dev/openvpn_indicator/lock_ok.png")
 		
-		self.p = subprocess.Popen('ls')
+		self.p = subprocess.Popen(['echo', 'vpn-alfred'])
 
 		self.menu_setup()
 		self.ind.set_menu(self.menu)
