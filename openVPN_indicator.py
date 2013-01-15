@@ -84,10 +84,7 @@ class OpenVPNInd:
 		self.vpn_on_item.hide()
 
 	def vpn_off(self, widget):
-		if self.p.poll() == None:
-			self.p.terminate()
-		else:
-			subprocess.call(['gksu', 'killall', 'openvpn'])
+		subprocess.call(['gksu', 'killall', 'openvpn'])
 		self.vpn_off_item.hide()
 		self.vpn_on_item.show()
 
