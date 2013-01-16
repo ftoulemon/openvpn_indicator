@@ -94,8 +94,12 @@ class OpenVPNInd:
 	def check_vpn(self):
 		if 'tapVPN' in netifaces.interfaces():
 			self.ind.set_status(appindicator.STATUS_ATTENTION)
+			self.vpn_off_item.show()
+			self.vpn_on_item.hide()
 		else:
 			self.ind.set_status(appindicator.STATUS_ACTIVE)
+			self.vpn_off_item.hide()
+			self.vpn_on_item.show()
 		return True
 
 if __name__== "__main__":
